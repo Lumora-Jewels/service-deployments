@@ -1,6 +1,6 @@
 # Microservices Architecture: Lumora Jewels
 
-This document provides an overview of the microservices and architecture implemented in the Lumora Jewels deployment. It is intended for developers and architects to understand the service boundaries, responsibilities, and interactions within the system.
+This markdown document provides an overview of the microservices and architecture implemented in the Lumora Jewels deployment. It is intended for developers and architects to understand the service boundaries, responsibilities, and interactions within the system.
 
 ## Overview
 
