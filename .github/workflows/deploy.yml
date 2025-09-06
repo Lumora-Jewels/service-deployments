@@ -108,8 +108,8 @@ jobs:
             fi
             export DOCKER_HUB_USERNAME=${{ env.DOCKER_HUB_USERNAME }}
             export GIT_COMMIT_SHA=${{ github.sha }}
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            docker compose pull
+            docker compose up -d --remove-orphans
             docker image prune -f
             timeout: 1200
             command_timeout: 1200
