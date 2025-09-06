@@ -14,6 +14,7 @@ jobs:
       CLOUD_SERVER_HOST: ${{ secrets.CLOUD_SERVER_HOST }}
       CLOUD_SERVER_USER: ${{ secrets.CLOUD_SERVER_USER }}
       CLOUD_SERVER_SSH_KEY: ${{ secrets.CLOUD_SERVER_SSH_KEY }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,6 +28,7 @@ jobs:
           username: ${{ env.DOCKER_HUB_USERNAME }}
           password: ${{ env.DOCKER_HUB_TOKEN }}
 
+      # ---------- Build & Push Services ----------
       - name: Build and push user-service
         uses: docker/build-push-action@v5
         with:
@@ -75,7 +77,6 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_HUB_USERNAME }}/order-service:${{ github.sha }}
 
-
       - name: Build and push notification-service
         uses: docker/build-push-action@v5
         with:
@@ -92,6 +93,7 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_HUB_USERNAME }}/lumora-api-gateway:${{ github.sha }}
 
+      # ---------- Deploy Step ----------
       - name: Deploy to Cloud Server via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -99,17 +101,31 @@ jobs:
           username: ${{ env.CLOUD_SERVER_USER }}
           key: ${{ env.CLOUD_SERVER_SSH_KEY }}
           script: |
+            # Ensure docker and compose are available
+            if ! command -v docker &> /dev/null; then
+              echo "Docker not found. Please install Docker first."
+              exit 1
+            fi
+
+            if ! docker compose version &> /dev/null; then
+              echo "Docker Compose plugin not found. Please install it."
+              exit 1
+            fi
+
+            # Update deployment repo
             if [ -d ~/deployment ]; then
               cd ~/deployment
-              git pull origin main
+              git fetch origin
+              git reset --hard origin/main
             else
               git clone https://github.com/Lumora-Jewels/service-deployments.git ~/deployment
               cd ~/deployment
             fi
+
             export DOCKER_HUB_USERNAME=${{ env.DOCKER_HUB_USERNAME }}
             export GIT_COMMIT_SHA=${{ github.sha }}
+
+            # Pull & restart services
             docker compose pull
             docker compose up -d --remove-orphans
             docker image prune -f
-            timeout: 1200
-            command_timeout: 1200
