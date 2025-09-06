@@ -64,15 +64,6 @@ services:
       - cart-service
       - user-service
 
-  payment-service:
-    image: ${DOCKER_HUB_USERNAME}/payment-service:${GIT_COMMIT_SHA}
-    ports:
-      - "4007:5007"
-    env_file:
-      - ./payment-service/.env
-    depends_on:
-      - mongo
-      - order-service
 
   notification-service:
     image: ${DOCKER_HUB_USERNAME}/notification-service:${GIT_COMMIT_SHA}
@@ -100,4 +91,5 @@ services:
       - category-service
       - cart-service
       - order-service
-      - payment-service
+volumes:
+  mongo-data:
