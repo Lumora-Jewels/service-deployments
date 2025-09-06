@@ -102,19 +102,19 @@ jobs:
       - name: Deploy to Cloud Server via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
-            host: ${{ env.CLOUD_SERVER_HOST }}
-            username: ${{ env.CLOUD_SERVER_USER }}
-            key: ${{ env.CLOUD_SERVER_SSH_KEY }}
-            script: >
-              if [ -d ~/deployment ]; then
-                cd ~/deployment
-                git pull origin main
-              else
-                git clone https://github.com/Lumora-Jewels/service-deployments.git ~/deployment
-                cd ~/deployment
-              fi
-              export DOCKER_HUB_USERNAME=${{ env.DOCKER_HUB_USERNAME }}
-              export GIT_COMMIT_SHA=${{ github.sha }}
-              docker-compose pull
-              docker-compose up -d --remove-orphans
-              docker image prune -f
+          host: ${{ env.CLOUD_SERVER_HOST }}
+          username: ${{ env.CLOUD_SERVER_USER }}
+          key: ${{ env.CLOUD_SERVER_SSH_KEY }}
+          script: |
+            if [ -d ~/deployment ]; then
+              cd ~/deployment
+              git pull origin main
+            else
+              git clone https://github.com/Lumora-Jewels/service-deployments.git ~/deployment
+              cd ~/deployment
+            fi
+            export DOCKER_HUB_USERNAME=${{ env.DOCKER_HUB_USERNAME }}
+            export GIT_COMMIT_SHA=${{ github.sha }}
+            docker-compose pull
+            docker-compose up -d --remove-orphans
+            docker image prune -f
