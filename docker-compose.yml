@@ -101,7 +101,3 @@ services:
       - cart-service
       - order-service
       - payment-service
-      - notification-service
-
-volumes:
-  mongo-data:

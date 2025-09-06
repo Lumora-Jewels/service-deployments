@@ -75,13 +75,6 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_HUB_USERNAME }}/order-service:${{ github.sha }}
 
-      - name: Build and push payment-service
-        uses: docker/build-push-action@v5
-        with:
-          context: ./payment-service
-          file: ./payment-service/Dockerfile
-          push: true
-          tags: ${{ env.DOCKER_HUB_USERNAME }}/payment-service:${{ github.sha }}
 
       - name: Build and push notification-service
         uses: docker/build-push-action@v5
