@@ -129,3 +129,13 @@ jobs:
             docker compose pull
             docker compose up -d --remove-orphans
             docker image prune -f
+
+      - name: Deploy Kubernetes Manifests via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.CLOUD_SERVER_HOST }}
+          username: ${{ env.CLOUD_SERVER_USER }}
+          key: ${{ env.CLOUD_SERVER_SSH_KEY }}
+          script: |
+            cd ~/deployment
+            kubectl apply -f k8s/

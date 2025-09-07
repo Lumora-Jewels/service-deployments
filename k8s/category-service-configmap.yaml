@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: category-service-config
+  namespace: default
+data:
+  PORT: "5004"
+  MONGO_URI: "mongodb://mongo:27017/category_service"

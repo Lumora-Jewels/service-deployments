@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: <DOCKER_HUB_USERNAME>/user-service:<GIT_COMMIT_SHA>
+        ports:
+        - containerPort: 5001
+        envFrom:
+        - configMapRef:
+            name: user-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  ports:
+  - port: 5001
+    targetPort: 5001
+  selector:
+    app: user-service

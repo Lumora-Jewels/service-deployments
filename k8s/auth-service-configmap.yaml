@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+  namespace: default
+data:
+  PORT: "5002"
+  MONGO_URI: "mongodb://mongo:27017/auth_service"
+  JWT_SECRET: "uouR_jWt_s3cr3t"
+  JWT_EXPIRES_IN: "1d"
+  JWT_EXPIRE: "1d"
