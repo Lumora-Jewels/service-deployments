@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-service-config
+  namespace: default
+data:
+  PORT: "5003"
+  MONGO_URI: "mongodb://mongo:27017/product_service"

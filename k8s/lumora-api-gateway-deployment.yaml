@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lumora-api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lumora-api-gateway
+  template:
+    metadata:
+      labels:
+        app: lumora-api-gateway
+    spec:
+      containers:
+      - name: lumora-api-gateway
+        image: <DOCKER_HUB_USERNAME>/lumora-api-gateway:<GIT_COMMIT_SHA>
+        ports:
+        - containerPort: 4000
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        envFrom:
+        - configMapRef:
+            name: lumora-api-gateway-config
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: lumora-api-gateway-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lumora-api-gateway
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 4000
+    nodePort: 30080
+  selector:
+    app: lumora-api-gateway

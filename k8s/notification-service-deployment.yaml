@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+      - name: notification-service
+        image: <DOCKER_HUB_USERNAME>/notification-service:<GIT_COMMIT_SHA>
+        ports:
+        - containerPort: 5008
+        envFrom:
+        - configMapRef:
+            name: notification-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  ports:
+  - port: 5008
+    targetPort: 5008
+  selector:
+    app: notification-service

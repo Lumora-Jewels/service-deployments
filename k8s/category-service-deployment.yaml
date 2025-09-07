@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: category-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: category-service
+  template:
+    metadata:
+      labels:
+        app: category-service
+    spec:
+      containers:
+      - name: category-service
+        image: <DOCKER_HUB_USERNAME>/category-service:<GIT_COMMIT_SHA>
+        ports:
+        - containerPort: 5004
+        envFrom:
+        - configMapRef:
+            name: category-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: category-service
+spec:
+  ports:
+  - port: 5004
+    targetPort: 5004
+  selector:
+    app: category-service

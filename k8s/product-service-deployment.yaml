@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+      - name: product-service
+        image: <DOCKER_HUB_USERNAME>/product-service:<GIT_COMMIT_SHA>
+        ports:
+        - containerPort: 5003
+        envFrom:
+        - configMapRef:
+            name: product-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  ports:
+  - port: 5003
+    targetPort: 5003
+  selector:
+    app: product-service
